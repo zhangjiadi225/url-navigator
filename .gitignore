@@ -36,6 +36,12 @@ yarn-error.log*
 # vercel
 .vercel
 
+# history.json
+history.json
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# history data
+src/app/staticJson/history.json
