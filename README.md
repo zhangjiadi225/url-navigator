@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Quick Add Application
 
-## Getting Started
+基于 Next.js 14 构建的快速添加应用，提供高效的内容管理解决方案。
 
-First, run the development server:
+## 技术栈
+
+- ⚡️ [Next.js 14](https://nextjs.org/) - React 框架
+- 🔥 [TypeScript](https://www.typescriptlang.org/) - 类型安全
+- 🎨 [Tailwind CSS](https://tailwindcss.com/) - CSS 框架
+
+## 开发环境设置
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+# 安装依赖
+pnpm install
+
+# 启动开发服务器
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+访问 [http://localhost:3000](http://localhost:3000) 查看应用。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 项目结构
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+├── app/                # App Router 路由
+│   ├── quick-add/     # 快速添加功能
+│   └── page.tsx       # 首页
+├── components/        # UI 组件
+└── lib/              # 工具函数
+```
 
-## Learn More
+## 构建部署
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+# 构建生产版本
+pnpm build
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# 启动生产服务器
+pnpm start
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 开发规范
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- 使用 TypeScript 进行开发
+- 遵循 ESLint 规则
+- 使用 Prettier 进行代码格式化
