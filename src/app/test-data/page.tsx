@@ -149,17 +149,24 @@ export default function TestDataGenerator() {
 	}
 
 	const handleFetchSmsCodeClick = async () => {
-		const phoneInputElement = document.getElementById(
-			'phoneInput'
-		) as HTMLInputElement
+		const phoneInputElement = document.getElementById('phoneInput') as HTMLInputElement
 		if (phoneInputElement) {
 			const smsCode = await fetchSmsCode(phoneInputElement.value)
 			if (smsCode) {
+				// 创建一个临时输入框来实现复制功能
+				const tempInput = document.createElement('input')
+				tempInput.value = smsCode
+				document.body.appendChild(tempInput)
+				tempInput.select()
+				
 				try {
-					await navigator.clipboard.writeText(smsCode)
+					document.execCommand('copy')
 					showMessage(`验证码已复制到剪切板: ${smsCode}`)
 				} catch (error) {
-					showMessage(error as string)
+					showMessage('复制失败，验证码为：' + smsCode)
+					console.error(error)
+				} finally {
+					document.body.removeChild(tempInput)
 				}
 			} else {
 				showMessage('获取验证码失败')
