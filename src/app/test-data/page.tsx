@@ -60,15 +60,21 @@ export default function TestDataGenerator() {
 		return `${baseCode}${checkDigit}`
 	}
 
+	const generateValidUSCCode = () => {
+		let code;
+		do {
+			code = generateUSCCode();
+		} while (!organizationVaild(code));
+		return code;
+	};
+
 	const handleGenerateClick = () => {
-		const generatedCode = generateUSCCode()
-		const inputElement = document.getElementById(
-			'uscCodeInput'
-		) as HTMLInputElement
+		const generatedCode = generateValidUSCCode();
+		const inputElement = document.getElementById('uscCodeInput') as HTMLInputElement;
 		if (inputElement) {
-			inputElement.value = generatedCode
+			inputElement.value = generatedCode;
 		}
-	}
+	};
 
 	const showMessage = (message: string) => {
 		const messageElement = document.createElement('div')
@@ -212,30 +218,36 @@ export default function TestDataGenerator() {
 		return `${baseCode}${checkCode}`
 	}
 
-	const handleGeneratePersonClick = () => {
-		const name = generateRandomName()
-		const idCard = generateRandomIdCard()
+	const generateValidIdCard = () => {
+		let idCard;
+		do {
+			idCard = generateRandomIdCard();
+		} while (!idCardVerification(idCard));
+		return idCard;
+	};
 
-		const nameInput = document.getElementById('nameInput') as HTMLInputElement
-		const idCardInput = document.getElementById(
-			'idCardInput'
-		) as HTMLInputElement
+	const handleGeneratePersonClick = () => {
+		const name = generateRandomName();
+		const idCard = generateValidIdCard();
+
+		const nameInput = document.getElementById('nameInput') as HTMLInputElement;
+		const idCardInput = document.getElementById('idCardInput') as HTMLInputElement;
 
 		if (nameInput && idCardInput) {
-			nameInput.value = name
-			idCardInput.value = idCard
+			nameInput.value = name;
+			idCardInput.value = idCard;
 
 			const newRecord: PersonRecord = {
 				id: Date.now(),
 				name,
 				idCard,
-			}
+			};
 
-			const updatedRecords = [newRecord, ...records].slice(0, 50)
-			setRecords(updatedRecords)
-			sessionStorage.setItem('personRecords', JSON.stringify(updatedRecords))
+			const updatedRecords = [newRecord, ...records].slice(0, 50);
+			setRecords(updatedRecords);
+			sessionStorage.setItem('personRecords', JSON.stringify(updatedRecords));
 		}
-	}
+	};
 
 	const handleValidateIdCardClick = () => {
 		const idCardInput = document.getElementById(
