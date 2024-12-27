@@ -6,8 +6,30 @@ const customFaker = new Faker({
 	locale: [zh_CN],
 })
 
+// 定义校验规则相关的常量
+const BASE_CODES = '0123456789ABCDEFGHJKLMNPQRTUWXY'
+const power = [1, 3, 9, 27, 19, 26, 16, 17, 20, 29, 25, 13, 8, 24, 10, 30, 28]
+
+// 校验统一社会信用代码的函数
+function isValidCreditCode(creditCode: string) {
+  // 计算校验码
+  let sum = 0
+  for (let i = 0; i < 17; i++) {
+    const index = BASE_CODES.indexOf(creditCode[i])
+    sum += index * power[i]
+  }
+  const checkCode = 31 - (sum % 31)
+  const calculatedCode = BASE_CODES[checkCode % 31]
+  return calculatedCode === creditCode[17]
+}
+// 统一社会信用代码输入
 function organizationVaild(text: string) {
-	return /[0-9A-HJ-NPQRTUWXY]{2}\d{6}[0-9A-HJ-NPQRTUWXY]{10}/.test(text)
+  const res = /[0-9A-HJ-NPQRTUWXY]{2}\d{6}[0-9A-HJ-NPQRTUWXY]{10}/.test(text)
+  if (res) {
+    return isValidCreditCode(text)
+  } else {
+    return false
+  }
 }
 function phoneValidType(txt: string) {
 	return /^1[3456789]\d{9}$/.test(txt)
@@ -36,19 +58,19 @@ export default function TestDataGenerator() {
 	const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
 	const calculateCheckDigit = (code: string) => {
-		const weights = [
-			1, 3, 9, 27, 19, 26, 16, 17, 20, 29, 25, 13, 8, 24, 10, 30, 28,
-		]
-		const checkChars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-		let sum = 0
+		const weights = [1, 3, 9, 27, 19, 26, 16, 17, 20, 29, 25, 13, 8, 24, 10, 30, 28];
+		const checkChars = '0123456789ABCDEFGHJKLMNPQRTUWXY';
+		let sum = 0;
 
 		for (let i = 0; i < code.length; i++) {
-			sum += parseInt(code[i], 36) * weights[i]
+			const index = checkChars.indexOf(code[i]);
+			sum += index * weights[i];
 		}
 
-		const mod = sum % 31
-		return checkChars[mod]
-	}
+		const mod = sum % 31;
+		const checkDigitIndex = (31 - mod) % 31;
+		return checkChars[checkDigitIndex];
+	};
 
 	const generateUSCCode = () => {
 		const managementDeptCode = customFaker.helpers.arrayElement(['1', '5'])
