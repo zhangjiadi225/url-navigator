@@ -572,10 +572,6 @@ export default function QuickAdd() {
 							<button
 								className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded"
 								onClick={() => {
-									if (categories.length === 0) {
-										alert('必须先导入初始数据')
-										return
-									}
 									setShowConfig(false)
 								}}
 							>
