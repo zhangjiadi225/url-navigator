@@ -1,6 +1,6 @@
-'use client';
+'use client'
 import { Faker, zh_CN } from '@faker-js/faker'
-import { useState } from 'react';
+import { useState } from 'react'
 
 const customFaker = new Faker({
 	locale: [zh_CN],
@@ -12,32 +12,39 @@ const power = [1, 3, 9, 27, 19, 26, 16, 17, 20, 29, 25, 13, 8, 24, 10, 30, 28]
 
 // 校验统一社会信用代码的函数
 function isValidCreditCode(creditCode: string) {
-  // 计算校验码
-  let sum = 0
-  for (let i = 0; i < 17; i++) {
-    const index = BASE_CODES.indexOf(creditCode[i])
-    sum += index * power[i]
-  }
-  const checkCode = 31 - (sum % 31)
-  const calculatedCode = BASE_CODES[checkCode % 31]
-  return calculatedCode === creditCode[17]
+	// 计算校验码
+	let sum = 0
+	for (let i = 0; i < 17; i++) {
+		const index = BASE_CODES.indexOf(creditCode[i])
+		sum += index * power[i]
+	}
+	const checkCode = 31 - (sum % 31)
+	const calculatedCode = BASE_CODES[checkCode % 31]
+	return calculatedCode === creditCode[17]
 }
 // 统一社会信用代码输入
 function organizationVaild(text: string) {
-  const res = /[0-9A-HJ-NPQRTUWXY]{2}\d{6}[0-9A-HJ-NPQRTUWXY]{10}/.test(text)
-  if (res) {
-    return isValidCreditCode(text)
-  } else {
-    return false
-  }
+	const res = /[0-9A-HJ-NPQRTUWXY]{2}\d{6}[0-9A-HJ-NPQRTUWXY]{10}/.test(text)
+	if (res) {
+		return isValidCreditCode(text)
+	} else {
+		return false
+	}
 }
 function phoneValidType(txt: string) {
 	return /^1[3456789]\d{9}$/.test(txt)
 }
 function idCardVerification(txt: string) {
-	return /^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/.test(
-		txt
-	)
+	// 15位数身份证正则表达式
+	const arg1 = /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$/
+	// 18位数身份证正则表达式
+	const arg2 =
+		/^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])((\d{4})|\d{3}[xX])$/
+	if (txt.match(arg1) == null && txt.match(arg2) == null) {
+		return false
+	} else {
+		return true
+	}
 }
 
 type PersonRecord = {
@@ -45,7 +52,6 @@ type PersonRecord = {
 	name: string
 	idCard: string
 }
-
 export default function TestDataGenerator() {
 	const [records, setRecords] = useState<PersonRecord[]>(() => {
 		if (typeof window !== 'undefined') {
@@ -58,19 +64,21 @@ export default function TestDataGenerator() {
 	const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
 	const calculateCheckDigit = (code: string) => {
-		const weights = [1, 3, 9, 27, 19, 26, 16, 17, 20, 29, 25, 13, 8, 24, 10, 30, 28];
-		const checkChars = '0123456789ABCDEFGHJKLMNPQRTUWXY';
-		let sum = 0;
+		const weights = [
+			1, 3, 9, 27, 19, 26, 16, 17, 20, 29, 25, 13, 8, 24, 10, 30, 28,
+		]
+		const checkChars = '0123456789ABCDEFGHJKLMNPQRTUWXY'
+		let sum = 0
 
 		for (let i = 0; i < code.length; i++) {
-			const index = checkChars.indexOf(code[i]);
-			sum += index * weights[i];
+			const index = checkChars.indexOf(code[i])
+			sum += index * weights[i]
 		}
 
-		const mod = sum % 31;
-		const checkDigitIndex = (31 - mod) % 31;
-		return checkChars[checkDigitIndex];
-	};
+		const mod = sum % 31
+		const checkDigitIndex = (31 - mod) % 31
+		return checkChars[checkDigitIndex]
+	}
 
 	const generateUSCCode = () => {
 		const managementDeptCode = customFaker.helpers.arrayElement(['1', '5'])
@@ -83,20 +91,22 @@ export default function TestDataGenerator() {
 	}
 
 	const generateValidUSCCode = () => {
-		let code;
+		let code
 		do {
-			code = generateUSCCode();
-		} while (!organizationVaild(code));
-		return code;
-	};
+			code = generateUSCCode()
+		} while (!organizationVaild(code))
+		return code
+	}
 
 	const handleGenerateClick = () => {
-		const generatedCode = generateValidUSCCode();
-		const inputElement = document.getElementById('uscCodeInput') as HTMLInputElement;
+		const generatedCode = generateValidUSCCode()
+		const inputElement = document.getElementById(
+			'uscCodeInput'
+		) as HTMLInputElement
 		if (inputElement) {
-			inputElement.value = generatedCode;
+			inputElement.value = generatedCode
 		}
-	};
+	}
 
 	const showMessage = (message: string) => {
 		const messageElement = document.createElement('div')
@@ -177,7 +187,9 @@ export default function TestDataGenerator() {
 	}
 
 	const handleFetchSmsCodeClick = async () => {
-		const phoneInputElement = document.getElementById('phoneInput') as HTMLInputElement
+		const phoneInputElement = document.getElementById(
+			'phoneInput'
+		) as HTMLInputElement
 		if (phoneInputElement) {
 			const smsCode = await fetchSmsCode(phoneInputElement.value)
 			if (smsCode) {
@@ -186,7 +198,7 @@ export default function TestDataGenerator() {
 				tempInput.value = smsCode
 				document.body.appendChild(tempInput)
 				tempInput.select()
-				
+
 				try {
 					document.execCommand('copy')
 					showMessage(`验证码已复制到剪切板: ${smsCode}`)
@@ -241,35 +253,37 @@ export default function TestDataGenerator() {
 	}
 
 	const generateValidIdCard = () => {
-		let idCard;
+		let idCard
 		do {
-			idCard = generateRandomIdCard();
-		} while (!idCardVerification(idCard));
-		return idCard;
-	};
+			idCard = generateRandomIdCard()
+		} while (!idCardVerification(idCard))
+		return idCard
+	}
 
 	const handleGeneratePersonClick = () => {
-		const name = generateRandomName();
-		const idCard = generateValidIdCard();
+		const name = generateRandomName()
+		const idCard = generateValidIdCard()
 
-		const nameInput = document.getElementById('nameInput') as HTMLInputElement;
-		const idCardInput = document.getElementById('idCardInput') as HTMLInputElement;
+		const nameInput = document.getElementById('nameInput') as HTMLInputElement
+		const idCardInput = document.getElementById(
+			'idCardInput'
+		) as HTMLInputElement
 
 		if (nameInput && idCardInput) {
-			nameInput.value = name;
-			idCardInput.value = idCard;
+			nameInput.value = name
+			idCardInput.value = idCard
 
 			const newRecord: PersonRecord = {
 				id: Date.now(),
 				name,
 				idCard,
-			};
+			}
 
-			const updatedRecords = [newRecord, ...records].slice(0, 50);
-			setRecords(updatedRecords);
-			sessionStorage.setItem('personRecords', JSON.stringify(updatedRecords));
+			const updatedRecords = [newRecord, ...records].slice(0, 50)
+			setRecords(updatedRecords)
+			sessionStorage.setItem('personRecords', JSON.stringify(updatedRecords))
 		}
-	};
+	}
 
 	const handleValidateIdCardClick = () => {
 		const idCardInput = document.getElementById(
